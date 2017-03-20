@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.droidrui.refreshlayoutdemo.view.RefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/refresh_layout"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <com.droidrui.refreshlayoutdemo.view.RefreshHeaderView
+        android:id="@id/refresh_header_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+    <TextView
+        android:id="@id/content_view"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:gravity="center"
+        android:text="@string/hello_blank_fragment" />
+
+
+    <com.droidrui.refreshlayoutdemo.view.LoadMoreFooterView
+        android:id="@id/load_more_footer_view"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content" />
+
+</com.droidrui.refreshlayoutdemo.view.RefreshLayout>

@@ -1,0 +1,13 @@
+<resources>
+    <string name="app_name">TaskDemo</string>
+    <string name="data_error">数据错误</string>
+    <string name="no_more">没有更多了</string>
+    <string name="server_error">服务器错误</string>
+    <string name="network_invalid">网络不可用</string>
+    <string name="click_d_item">点击了第%d项</string>
+
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+</resources>
