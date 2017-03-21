@@ -38,9 +38,6 @@ public class RecyclerListFragment extends BaseFragment {
 
     private int mPage = 1;
 
-    private boolean mLoadingMore;
-    private boolean mNoMore;
-
     public RecyclerListFragment() {
         // Required empty public constructor
     }
@@ -71,6 +68,13 @@ public class RecyclerListFragment extends BaseFragment {
             }
         });
 
+        mRefreshLayout.setOnLoadMoreListener(new RefreshLayout.OnLoadMoreListener() {
+            @Override
+            public void onLoadMore() {
+                getBlogList();
+            }
+        });
+
         mRecyclerView = (RecyclerView) findViewById(R.id.content_view);
         mLayoutManager = new LinearLayoutManager(mActivity);
         mRecyclerView.setLayoutManager(mLayoutManager);
@@ -91,18 +95,6 @@ public class RecyclerListFragment extends BaseFragment {
         mList = new ArrayList<>();
         mAdapter = new BlogRecyclerAdapter(mActivity, mList);
         mRecyclerView.setAdapter(mAdapter);
-
-        mRecyclerView.addOnScrollListener(new RecyclerView.OnScrollListener() {
-
-            @Override
-            public void onScrolled(RecyclerView recyclerView, int dx, int dy) {
-                int position = mLayoutManager.findLastVisibleItemPosition();
-                if (!mNoMore && mList.size() >= Common.COUNT && position == mList.size() && !mLoadingMore) {
-                    mLoadingMore = true;
-                    getBlogList();
-                }
-            }
-        });
     }
 
     private void getBlogList() {
@@ -111,8 +103,8 @@ public class RecyclerListFragment extends BaseFragment {
 
                     @Override
                     public void onFinish() {
-                        mLoadingMore = false;
                         mRefreshLayout.completeRefresh();
+                        mRefreshLayout.completeLoadMore();
                     }
 
                     @Override
@@ -125,13 +117,12 @@ public class RecyclerListFragment extends BaseFragment {
                         if (mPage == 1) {
                             mList.clear();
                         }
-                        mList.addAll(result);
-                        mAdapter.notifyDataSetChanged();
-                        if (result.size() >= Common.COUNT) {
+                        if (result.size() >= 0) {
+                            mList.addAll(result);
+                            mAdapter.notifyDataSetChanged();
                             mPage++;
                         } else {
-                            mNoMore = true;
-                            mAdapter.setNoMore(true);
+                            Toaster.show(R.string.no_more);
                         }
                     }
                 }));

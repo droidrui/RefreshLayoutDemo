@@ -76,6 +76,40 @@ public class ScrollViewFragment extends BaseFragment {
         mWelfareList2 = new ArrayList<>();
         mBannerAdapter2 = new BannerPagerAdapter(mWelfareList2);
         viewPager2.setAdapter(mBannerAdapter2);
+
+        viewPager1.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                mRefreshLayout.setVeritcalScrollEnabled(1, state == ViewPager.SCROLL_STATE_IDLE);
+            }
+        });
+
+        viewPager2.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                mRefreshLayout.setVeritcalScrollEnabled(2, state == ViewPager.SCROLL_STATE_IDLE);
+            }
+        });
     }
 
     private void getWelfareList1() {

@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">TaskDemo</string>
+    <string name="app_name">RefreshLayoutDemo</string>
     <string name="data_error">数据错误</string>
     <string name="no_more">没有更多了</string>
     <string name="server_error">服务器错误</string>

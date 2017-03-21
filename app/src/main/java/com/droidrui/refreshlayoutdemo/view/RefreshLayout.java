@@ -17,11 +17,20 @@ import com.droidrui.refreshlayoutdemo.R;
 
 /**
  * Created by Administrator on 2016/12/6.
- * 用onInterceptTouchEvent在targetView是ScrollView时，会有问题，要设置ScrollView的android:overScrollMode="never"才行,
- * SwipeToLoadLayout也有这个问题，PtrFrameLayout没有这个问题。
  */
-
 public class RefreshLayout extends ViewGroup {
+
+    private static final int STATUS_REFRESHING_HIDED = 4;
+    private static final int STATUS_REFRESH_COMPLETE = 3;
+    private static final int STATUS_REFRESHING = 2;
+    private static final int STATUS_WANT_TO_REFRESH = 1;
+    private static final int STATUS_NORMAL = 0;
+    private static final int STATUS_WANT_TO_LOAD_MORE = -1;
+    private static final int STATUS_LOADING_MORE = -2;
+    private static final int STATUS_LOAD_MORE_COMPLETE = -3;
+    private static final int STATUS_LOADING_MORE_HIDED = -4;
+
+    private static final int SCROLL_DURATION = 250;
 
     private static final int INVALID_COORDINATE = -1;
     private static final int INVALID_POINTER = -1;
@@ -32,15 +41,8 @@ public class RefreshLayout extends ViewGroup {
     private OnRefreshListener mRefreshListener;
     private OnLoadMoreListener mLoadMoreListener;
 
-    /**
-     * 刷新中或者加载中的状态，由用户手势触发，只能用代码结束这个状态
-     * 这个状态并不代表top一定等于刷新头的高度，top只要大于0就可以了, top等于0代表结束了刷新中的状态，不回调OnRefreshListener。
-     */
     private int mHandlingStatus;
 
-    /**
-     * 是否可以触发mContentView的子View的点击事件
-     */
     private boolean mTrigger;
 
     private int mTouchSlop;
@@ -367,17 +369,6 @@ public class RefreshLayout extends ViewGroup {
     }
 
     private boolean onCheckCanLoadMore() {
-        if (mContentView instanceof ViewGroup) {
-            ViewGroup layout = (ViewGroup) mContentView;
-            int childCount = layout.getChildCount();
-            if (childCount == 0) {
-                return false;
-            }
-            View child = layout.getChildAt(childCount - 1);
-            if (child.getBottom() < mContentView.getHeight() - mContentView.getPaddingBottom()) {
-                return false;
-            }
-        }
         return mLoadMoreEnabled && !ViewCompat.canScrollVertically(mContentView, 1);
     }
 
@@ -407,6 +398,14 @@ public class RefreshLayout extends ViewGroup {
 
     public void setVeritcalScrollEnabled(int key, boolean enabled) {
         mHorizontalMap.put(key, enabled);
+    }
+
+    public void setRefreshEnabled(boolean enabled) {
+        mRefreshEnabled = enabled;
+    }
+
+    public void setLoadMoreEnabled(boolean enabled) {
+        mLoadMoreEnabled = enabled;
     }
 
     public void setOnRefreshListener(OnRefreshListener listener) {

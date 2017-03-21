@@ -77,10 +77,29 @@ public class ViewPagerFragment extends BaseFragment {
                 getBlogList();
             }
         });
+        mRefreshLayout.setLoadMoreEnabled(false);
 
         ViewPager viewPager = new ViewPager(mActivity);
         LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, DimenUtils.dp2px(200));
         viewPager.setLayoutParams(layoutParams);
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                mRefreshLayout.setVeritcalScrollEnabled(1, state == ViewPager.SCROLL_STATE_IDLE);
+            }
+        });
+
         mWelfareList = new ArrayList<>();
         mBannerAdapter = new BannerPagerAdapter(mWelfareList);
         viewPager.setAdapter(mBannerAdapter);
