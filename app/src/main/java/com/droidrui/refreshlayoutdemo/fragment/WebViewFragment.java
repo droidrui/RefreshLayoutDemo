@@ -8,6 +8,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.webkit.WebView;
+import android.webkit.WebViewClient;
 
 import com.droidrui.refreshlayoutdemo.R;
 import com.droidrui.refreshlayoutdemo.view.RefreshLayout;
@@ -17,6 +18,8 @@ import com.droidrui.refreshlayoutdemo.view.RefreshLayout;
  */
 public class WebViewFragment extends BaseFragment {
 
+    private RefreshLayout mRefreshLayout;
+    private WebView mWebView;
 
     public WebViewFragment() {
         // Required empty public constructor
@@ -37,19 +40,30 @@ public class WebViewFragment extends BaseFragment {
     }
 
     private void initView() {
-        final WebView webView = (WebView) findViewById(R.id.content_view);
-        webView.loadUrl("https://github.com/");
-        final RefreshLayout refreshLayout = (RefreshLayout) findViewById(R.id.refresh_layout);
-        refreshLayout.setOnRefreshListener(new RefreshLayout.OnRefreshListener() {
+        mWebView = (WebView) findViewById(R.id.content_view);
+        mWebView.loadUrl("https://github.com/");
+
+        mWebView.setWebViewClient(new WebViewClient() {
+            @Override
+            public void onPageFinished(WebView view, String url) {
+                super.onPageFinished(view, url);
+                mRefreshLayout.completeRefresh();
+                mRefreshLayout.completeLoadMore();
+            }
+        });
+
+        mRefreshLayout = (RefreshLayout) findViewById(R.id.refresh_layout);
+        mRefreshLayout.setOnRefreshListener(new RefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                webView.postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        refreshLayout.completeRefresh();
-                        webView.reload();
-                    }
-                }, 2000);
+                mWebView.reload();
+            }
+        });
+
+        mRefreshLayout.setOnLoadMoreListener(new RefreshLayout.OnLoadMoreListener() {
+            @Override
+            public void onLoadMore() {
+                mWebView.reload();
             }
         });
     }

@@ -1,110 +1,81 @@
 package com.droidrui.refreshlayoutdemo.adapter;
 
-import android.support.v7.widget.RecyclerView;
+import android.app.Activity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
 import android.widget.ImageView;
-import android.widget.ProgressBar;
-import android.widget.TextView;
+import android.widget.RelativeLayout;
 
-import com.droidrui.refreshlayoutdemo.App;
 import com.droidrui.refreshlayoutdemo.R;
 import com.droidrui.refreshlayoutdemo.model.Welfare;
 import com.droidrui.refreshlayoutdemo.util.ImageUtils;
-import com.droidrui.refreshlayoutdemo.util.ResUtils;
-import com.droidrui.refreshlayoutdemo.view.Toaster;
 
 import java.util.ArrayList;
 
 /**
  * Created by lr on 2016/6/30.
  */
-public class WelfareGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder> {
+public class WelfareGridAdapter extends BaseAdapter {
 
     private ArrayList<Welfare> mList;
     private LayoutInflater mInflater;
 
     private int mItemHeight;
-    private ViewGroup.LayoutParams mItemLayoutParams;
+    private RelativeLayout.LayoutParams mItemLayoutParams;
 
-    private boolean mNoMore;
-
-    public WelfareGridAdapter(ArrayList<Welfare> list) {
+    public WelfareGridAdapter(Activity activity, ArrayList<Welfare> list) {
         mList = list;
-        mInflater = LayoutInflater.from(App.getContext());
-        mItemLayoutParams = new ViewGroup.LayoutParams(
+        mInflater = LayoutInflater.from(activity);
+        mItemLayoutParams = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.MATCH_PARENT);
     }
 
     @Override
-    public RecyclerView.ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
-        if (viewType == 0) {
-            View v = mInflater.inflate(R.layout.item_welfare, parent, false);
-            return new ItemViewHolder(v);
-        } else {
-            View v = mInflater.inflate(R.layout.item_load_more, parent, false);
-            return new LoadMoreViewHolder(v);
-        }
+    public int getCount() {
+        return mList.size();
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
-        if (getItemViewType(position) == 0) {
-            ItemViewHolder ho = (ItemViewHolder) holder;
-            if (ho.itemView.getLayoutParams().height != mItemHeight) {
-                ho.itemView.setLayoutParams(mItemLayoutParams);
-            }
-            Welfare item = mList.get(position);
-            ImageUtils.load(item.url, ho.mIv, mItemHeight);
-            ho.mIv.setOnClickListener(new View.OnClickListener() {
-                @Override
-                public void onClick(View v) {
-                    Toaster.show(String.format(ResUtils.getString(R.string.click_d_item), position));
-                }
-            });
-        } else {
-            LoadMoreViewHolder ho = (LoadMoreViewHolder) holder;
-            if (mNoMore) {
-                ho.mProgressBar.setVisibility(View.GONE);
-                ho.mTv.setVisibility(View.VISIBLE);
-            }
-        }
+    public Object getItem(int position) {
+        return null;
     }
 
     @Override
-    public int getItemCount() {
-        return mList.size() + 1;
-    }
-
-    @Override
-    public int getItemViewType(int position) {
-        if (position == mList.size()) {
-            return 1;
-        }
+    public long getItemId(int position) {
         return 0;
     }
 
-    private class ItemViewHolder extends RecyclerView.ViewHolder {
+    @Override
+    public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder holder = null;
+        if (convertView == null) {
+            convertView = mInflater.inflate(R.layout.item_welfare, parent, false);
+            holder = new ViewHolder(convertView);
+            convertView.setTag(holder);
+        } else {
+            holder = (ViewHolder) convertView.getTag();
+        }
+        holder.bind(position);
+        return convertView;
+    }
+
+    private class ViewHolder {
 
         ImageView mIv;
 
-        public ItemViewHolder(View itemView) {
-            super(itemView);
+        private ViewHolder(View itemView) {
             mIv = (ImageView) itemView.findViewById(R.id.iv);
         }
-    }
 
-    private class LoadMoreViewHolder extends RecyclerView.ViewHolder {
-
-        ProgressBar mProgressBar;
-        TextView mTv;
-
-        public LoadMoreViewHolder(View itemView) {
-            super(itemView);
-            mProgressBar = (ProgressBar) itemView.findViewById(R.id.progress_bar);
-            mTv = (TextView) itemView.findViewById(R.id.tv);
+        private void bind(final int position) {
+            if (mIv.getLayoutParams().height != mItemHeight) {
+                mIv.setLayoutParams(mItemLayoutParams);
+            }
+            Welfare item = mList.get(position);
+            ImageUtils.load(item.url, mIv, mItemHeight);
         }
     }
 
@@ -113,14 +84,10 @@ public class WelfareGridAdapter extends RecyclerView.Adapter<RecyclerView.ViewHo
             return;
         }
         mItemHeight = height;
-        mItemLayoutParams = new ViewGroup.LayoutParams(
+        mItemLayoutParams = new RelativeLayout.LayoutParams(
                 ViewGroup.LayoutParams.MATCH_PARENT, mItemHeight);
         notifyDataSetChanged();
     }
 
-    public void setNoMore(boolean noMore) {
-        mNoMore = noMore;
-        notifyItemChanged(mList.size());
-    }
 
 }

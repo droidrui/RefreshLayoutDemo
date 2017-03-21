@@ -17,12 +17,12 @@ import java.util.ArrayList;
  */
 public class BlogTask {
 
-    public static Task<ArrayList<Blog>> getDataList(final String category, final int count, final int page) {
+    public static Task<ArrayList<Blog>> getDataList(final int count, final int page) {
         return new Task<ArrayList<Blog>>() {
             @Override
             protected void call() {
                 try {
-                    String method = API.BLOG + category + "/" + count + "/" + page;
+                    String method = API.BLOG + "/" + count + "/" + page;
                     HttpResponse response = OkHttpHelper.getInstance().get(method);
                     if (response.error != null) {
                         onError(response.error);

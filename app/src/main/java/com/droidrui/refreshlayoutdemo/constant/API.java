@@ -8,7 +8,7 @@ public class API {
 
     public static final String HOST = "http://gank.io/api/";
 
-    public static final String BLOG = "data/";
+    public static final String BLOG = "data/Android";
     public static final String WELFARE = "data/福利/";
 
 
