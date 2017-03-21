@@ -10,6 +10,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AbsListView;
 import android.widget.AbsListView.LayoutParams;
+import android.widget.AdapterView;
 import android.widget.ListView;
 
 import com.droidrui.refreshlayoutdemo.R;
@@ -23,6 +24,7 @@ import com.droidrui.refreshlayoutdemo.model.Welfare;
 import com.droidrui.refreshlayoutdemo.task.BlogTask;
 import com.droidrui.refreshlayoutdemo.task.WelfareTask;
 import com.droidrui.refreshlayoutdemo.util.DimenUtils;
+import com.droidrui.refreshlayoutdemo.util.ResUtils;
 import com.droidrui.refreshlayoutdemo.view.RefreshLayout;
 import com.droidrui.refreshlayoutdemo.view.Toaster;
 
@@ -110,6 +112,13 @@ public class ViewPagerFragment extends BaseFragment {
         mBlogList = new ArrayList<>();
         mBlogAdapter = new BlogListAdapter(mActivity, mBlogList);
         listView.setAdapter(mBlogAdapter);
+
+        listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                Toaster.show(String.format(ResUtils.getString(R.string.click_d_item), position));
+            }
+        });
 
         listView.setOnScrollListener(new AbsListView.OnScrollListener() {
             @Override

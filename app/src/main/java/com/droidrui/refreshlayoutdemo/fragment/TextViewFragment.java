@@ -11,6 +11,7 @@ import android.widget.TextView;
 
 import com.droidrui.refreshlayoutdemo.R;
 import com.droidrui.refreshlayoutdemo.view.RefreshLayout;
+import com.droidrui.refreshlayoutdemo.view.Toaster;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -69,5 +70,11 @@ public class TextViewFragment extends BaseFragment {
         });
 
         mTextView = (TextView) findViewById(R.id.content_view);
+        mTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toaster.show("点击了TextView");
+            }
+        });
     }
 }

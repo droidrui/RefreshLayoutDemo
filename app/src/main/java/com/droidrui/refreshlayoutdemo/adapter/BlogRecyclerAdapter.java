@@ -9,6 +9,8 @@ import android.widget.TextView;
 
 import com.droidrui.refreshlayoutdemo.R;
 import com.droidrui.refreshlayoutdemo.model.Blog;
+import com.droidrui.refreshlayoutdemo.util.ResUtils;
+import com.droidrui.refreshlayoutdemo.view.Toaster;
 
 import java.util.ArrayList;
 
@@ -32,12 +34,18 @@ public class BlogRecyclerAdapter extends RecyclerView.Adapter<RecyclerView.ViewH
     }
 
     @Override
-    public void onBindViewHolder(RecyclerView.ViewHolder holder, int position) {
+    public void onBindViewHolder(RecyclerView.ViewHolder holder, final int position) {
         ItemViewHolder ho = (ItemViewHolder) holder;
         Blog item = mList.get(position);
         ho.mDescTv.setText(item.desc);
         ho.mAuthorTv.setText(item.who);
         ho.mTimeTv.setText(item.createdAt);
+        ho.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toaster.show(String.format(ResUtils.getString(R.string.click_d_item), position));
+            }
+        });
     }
 
     @Override

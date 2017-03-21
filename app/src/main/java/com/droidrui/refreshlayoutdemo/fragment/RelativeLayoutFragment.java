@@ -7,10 +7,12 @@ import android.support.v4.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.RelativeLayout;
 import android.widget.TextView;
 
 import com.droidrui.refreshlayoutdemo.R;
 import com.droidrui.refreshlayoutdemo.view.RefreshLayout;
+import com.droidrui.refreshlayoutdemo.view.Toaster;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -18,6 +20,7 @@ import com.droidrui.refreshlayoutdemo.view.RefreshLayout;
 public class RelativeLayoutFragment extends BaseFragment {
 
     private RefreshLayout mRefreshLayout;
+    private RelativeLayout mRelativeLayout;
     private TextView mTextView;
 
     public RelativeLayoutFragment() {
@@ -68,7 +71,21 @@ public class RelativeLayoutFragment extends BaseFragment {
             }
         });
 
+        mRelativeLayout = (RelativeLayout) findViewById(R.id.content_view);
+        mRelativeLayout.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toaster.show("点击了RelativeLayout");
+            }
+        });
+
         mTextView = (TextView) findViewById(R.id.text_view);
+        mTextView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Toaster.show("点击了TextView");
+            }
+        });
     }
 
 }
