@@ -10,7 +10,6 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewGroup;
 import android.view.animation.DecelerateInterpolator;
-import android.widget.AbsListView;
 import android.widget.Scroller;
 
 import com.droidrui.refreshlayoutdemo.R;
@@ -34,6 +33,10 @@ public class RefreshLayout extends ViewGroup {
 
     private static final int INVALID_COORDINATE = -1;
     private static final int INVALID_POINTER = -1;
+
+    private static final float SLOPE = 0.0010f;
+
+    private static final int SCROLL_DELAY = 500;
 
     private boolean mRefreshEnabled = true;
     private boolean mLoadMoreEnabled = true;
@@ -199,7 +202,7 @@ public class RefreshLayout extends ViewGroup {
                         }
                         if (Math.abs(diffY) > mTouchSlop) {
                             int top = mContentView.getTop();
-                            float ratio = -0.0010f * Math.abs(top) + 1;
+                            float ratio = -SLOPE * Math.abs(top) + 1;
                             int offset = (int) (offsetY * ratio);
                             float coorY = top + offset;
                             if ((mHandlingStatus > STATUS_NORMAL && coorY <= 0) || (mHandlingStatus < STATUS_NORMAL && coorY >= 0)) {//0
@@ -234,7 +237,7 @@ public class RefreshLayout extends ViewGroup {
                     } else if (mHandlingStatus == STATUS_WANT_TO_LOAD_MORE) {//-1
                         mFooterView.onTopChange(top);
                     }
-                    float ratio = -0.0010f * Math.abs(top) + 1;
+                    float ratio = -SLOPE * Math.abs(top) + 1;
                     int offset = (int) (offsetY * ratio);
                     float coorY = top + offset;
                     if ((mHandlingStatus > STATUS_NORMAL && coorY <= 0) || (mHandlingStatus < STATUS_NORMAL && coorY >= 0)) {//0
@@ -286,35 +289,35 @@ public class RefreshLayout extends ViewGroup {
                     if (mHandlingStatus == STATUS_WANT_TO_REFRESH) {//1
                         if (top > mHeaderHeight) {
                             top = top - mHeaderHeight;
-                            mAutoScroller.onActionUp(top, 250);
+                            mAutoScroller.onActionUp(top, SCROLL_DURATION);
                         } else {
-                            mAutoScroller.onActionUp(top, 250);
+                            mAutoScroller.onActionUp(top, SCROLL_DURATION);
                         }
                     } else if (mHandlingStatus == STATUS_WANT_TO_LOAD_MORE) {//-1
                         if (top < -mFooterHeight) {
                             top = top + mFooterHeight;
-                            mAutoScroller.onActionUp(top, 250);
+                            mAutoScroller.onActionUp(top, SCROLL_DURATION);
                         } else {
-                            mAutoScroller.onActionUp(top, 250);
+                            mAutoScroller.onActionUp(top, SCROLL_DURATION);
                         }
                     } else if (mHandlingStatus == STATUS_REFRESHING) {//2
                         if (top > mHeaderHeight) {
                             top = top - mHeaderHeight;
-                            mAutoScroller.onActionUp(top, 250);
+                            mAutoScroller.onActionUp(top, SCROLL_DURATION);
                         } else {
                             mTrigger = true;//此时也可以触发子View点击事件
                         }
                     } else if (mHandlingStatus == STATUS_LOADING_MORE) {//-2
                         if (top < -mFooterHeight) {
                             top = top + mFooterHeight;
-                            mAutoScroller.onActionUp(top, 250);
+                            mAutoScroller.onActionUp(top, SCROLL_DURATION);
                         } else {
                             mTrigger = true;//此时也可以触发子View点击事件
                         }
                     } else if (mHandlingStatus == STATUS_REFRESH_COMPLETE) {//3
-                        mAutoScroller.onActionUp(top, 250);
+                        mAutoScroller.onActionUp(top, SCROLL_DURATION);
                     } else if (mHandlingStatus == STATUS_LOAD_MORE_COMPLETE) {//-3
-                        mAutoScroller.onActionUp(top, 250);
+                        mAutoScroller.onActionUp(top, SCROLL_DURATION);
                     }
                     ev.setAction(MotionEvent.ACTION_CANCEL);
                     super.dispatchTouchEvent(ev);
@@ -434,10 +437,10 @@ public class RefreshLayout extends ViewGroup {
                     public void run() {
                         if (!mDraging) {
                             int top = mContentView.getTop();
-                            mAutoScroller.onActionUp(top, 250);
+                            mAutoScroller.onActionUp(top, SCROLL_DURATION);
                         }
                     }
-                }, 500);
+                }, SCROLL_DELAY);
             } else {
                 setHandlingStatus(STATUS_NORMAL);//0
             }
@@ -449,14 +452,15 @@ public class RefreshLayout extends ViewGroup {
             setHandlingStatus(STATUS_LOAD_MORE_COMPLETE);//-3
             mTrigger = false;
             if (!mAttached) {
-                if (!mDraging) {
-                    int top = mContentView.getTop();
-                    mAutoScroller.onActionUp(top, 250);
-                    if (mContentView instanceof AbsListView) {
-                        AbsListView absListView = (AbsListView) mContentView;
-                        absListView.smoothScrollBy(-top, 550);
+                postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        if (!mDraging) {
+                            int top = mContentView.getTop();
+                            mAutoScroller.onActionUp(top, SCROLL_DURATION);
+                        }
                     }
-                }
+                }, SCROLL_DELAY);
             } else {
                 setHandlingStatus(STATUS_NORMAL);//0
             }
