@@ -19,9 +19,9 @@
 8. RelativeLayout
 9. TextView
 
-![](https://github.com/droidrui/RefreshLayoutDemo/tree/master/art/screenshot1.png)
-![](https://github.com/droidrui/RefreshLayoutDemo/tree/master/art/screenshot2.png)
-![](https://github.com/droidrui/RefreshLayoutDemo/tree/master/art/screenshot3.png)
+![截图1](art/screenshot1.png)
+![截图2](art/screenshot2.png)
+![截图3](art/screenshot3.png)
 
 ##### demo中使用干货（ http://gank.io ）的API， HTTP请求使用okhttp，JSON解析使用fastjson，感谢！
 
